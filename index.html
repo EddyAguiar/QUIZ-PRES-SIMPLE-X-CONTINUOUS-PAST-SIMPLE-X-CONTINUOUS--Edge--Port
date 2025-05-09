@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz: Contínuo vs Simples</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      color: #333;
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    .quiz-container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #1e90ff;
+    }
+    .question {
+      font-size: 1.3em;
+      margin-bottom: 20px;
+    }
+    .answers button {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .answers button:hover {
+      background-color: #e6f0ff;
+    }
+    .correct {
+      color: green;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .incorrect {
+      color: red;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    .explanation {
+      margin-top: 10px;
+      background: #eef6ff;
+      padding: 10px;
+      border-left: 4px solid #1e90ff;
+      border-radius: 4px;
+    }
+    #nextBtn, #restartBtn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    #scoreContainer {
+      margin-top: 30px;
+      font-size: 1.3em;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1>Quiz: Contínuo vs Simples</h1>
+    <div id="quiz"></div>
+    <button id="nextBtn" onclick="nextQuestion()">Próximo</button>
+    <div id="scoreContainer" style="display:none;"></div>
+    <button id="restartBtn" onclick="restartQuiz()" style="display:none;">Reiniciar</button>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "✅ Qual frase descreve uma ação TEMPORÁRIA no presente?",
+        answers: [
+          "I play football every Sunday.",
+          "She studies French on Mondays.",
+          "I am playing tennis today.",
+          "He works as a teacher."
+        ],
+        correct: 2,
+        explanation: "\"I am playing tennis today.\" está no presente contínuo, usado para situações temporárias."
+      },
+      {
+        question: "✅ Qual frase está no passado simples?",
+        answers: [
+          "She was talking to him.",
+          "They are playing chess.",
+          "Everybody sang songs yesterday.",
+          "He is reading now."
+        ],
+        correct: 2,
+        explanation: "\"Everybody sang songs yesterday.\" está no passado simples e descreve uma ação concluída."
+      },
+      {
+        question: "✅ Qual frase mostra uma ação interrompida por outra?",
+        answers: [
+          "He eats dinner at 7pm.",
+          "He called me while I was sleeping.",
+          "She was cooking all day.",
+          "I walked to school."
+        ],
+        correct: 1,
+        explanation: "\"He called me while I was sleeping.\" mostra uma ação (dormindo) interrompida por outra (ligar)."
+      },
+      {
+        question: "✅ Qual uso está correto para o passado contínuo?",
+        answers: [
+          "I was studying when the lights went out.",
+          "He eats breakfast now.",
+          "She play guitar yesterday.",
+          "They go to school."
+        ],
+        correct: 0,
+        explanation: "O passado contínuo \"was studying\" é usado para descrever uma ação contínua no passado interrompida por outra."
+      },
+      {
+        question: "✅ Qual frase deixa claro que a ação terminou no passado?",
+        answers: [
+          "He is going to the gym.",
+          "She was reading.",
+          "I saw Jack yesterday.",
+          "They are working now."
+        ],
+        correct: 2,
+        explanation: "A frase \"I saw Jack yesterday.\" está no passado simples com um tempo definido (ontem), indicando fim da ação."
+      },
+      {
+        question: "✅ Qual tempo verbal usamos para ações rotineiras?",
+        answers: [
+          "Past continuous",
+          "Present simple",
+          "Present continuous",
+          "Past simple"
+        ],
+        correct: 1,
+        explanation: "O presente simples é usado para hábitos, rotinas e ações regulares."
+      },
+      {
+        question: "✅ Qual tempo verbal usamos para ações em andamento no momento da fala?",
+        answers: [
+          "Past simple",
+          "Present simple",
+          "Present continuous",
+          "Future simple"
+        ],
+        correct: 2,
+        explanation: "O presente contínuo (am/is/are + verbo-ING) descreve ações que estão acontecendo agora."
+      },
+      {
+        question: "✅ Qual dessas frases está corretamente no passado contínuo?",
+        answers: [
+          "They was walking home.",
+          "They were walking home.",
+          "They walking home.",
+          "They walks home."
+        ],
+        correct: 1,
+        explanation: "\"They were walking home.\" é a forma correta do passado contínuo."
+      },
+      {
+        question: "✅ Qual alternativa mostra uma ação habitual?",
+        answers: [
+          "She is going to the cinema.",
+          "She went to the cinema yesterday.",
+          "She goes to the cinema every Friday.",
+          "She was going to the cinema."
+        ],
+        correct: 2,
+        explanation: "\"She goes to the cinema every Friday.\" usa o presente simples para indicar hábito."
+      },
+      {
+        question: "✅ Qual uso do ING está correto?",
+        answers: [
+          "She enjoy to dance.",
+          "She enjoys dancing.",
+          "She enjoying dance.",
+          "She dance enjoyed."
+        ],
+        correct: 1,
+        explanation: "Após verbos como enjoy, usamos o verbo com ING: enjoys dancing."
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function showQuestion() {
+      const q = quizData[currentQuestion];
+      const quiz = document.getElementById("quiz");
+      quiz.innerHTML = `<div class="question">${q.question}</div><div class="answers">` +
+        q.answers.map((answer, i) => `<button onclick="checkAnswer(${i})">${answer}</button>`).join('') + `</div>`;
+      document.getElementById("nextBtn").style.display = "none";
+    }
+
+    function checkAnswer(selected) {
+      const q = quizData[currentQuestion];
+      const buttons = document.querySelectorAll(".answers button");
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.correct) btn.classList.add("correct");
+        if (i === selected && i !== q.correct) btn.classList.add("incorrect");
+      });
+      if (selected === q.correct) score++;
+      const explanation = document.createElement("div");
+      explanation.className = "explanation";
+      explanation.innerText = q.explanation;
+      document.getElementById("quiz").appendChild(explanation);
+      document.getElementById("nextBtn").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+      currentQuestion++;
+      if (currentQuestion < quizData.length) {
+        showQuestion();
+      } else {
+        showScore();
+      }
+    }
+
+    function showScore() {
+      document.getElementById("quiz").style.display = "none";
+      document.getElementById("nextBtn").style.display = "none";
+      const scoreContainer = document.getElementById("scoreContainer");
+      scoreContainer.style.display = "block";
+      const percentage = Math.round((score / quizData.length) * 100);
+      scoreContainer.innerHTML = `✅ Você acertou ${score} de ${quizData.length} perguntas.<br>🎯 Sua pontuação: ${percentage}%`;
+      document.getElementById("restartBtn").style.display = "inline-block";
+    }
+
+    function restartQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      document.getElementById("quiz").style.display = "block";
+      document.getElementById("restartBtn").style.display = "none";
+      document.getElementById("scoreContainer").style.display = "none";
+      showQuestion();
+    }
+
+    showQuestion();
+  </script>
+</body>
+</html>
